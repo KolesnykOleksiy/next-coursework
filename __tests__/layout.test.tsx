@@ -1,4 +1,4 @@
-import { add } from '@/app/page';
+import { add } from '@/math';
 
 describe('Функція додавання', () => {
     test('додавання двох чисел', () => {
