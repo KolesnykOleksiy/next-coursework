@@ -25,7 +25,7 @@ export async function login(formData: FormData) {
     redirect('/')
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData):Promise<void> {
     const supabase = await createClient()
 
     // type-casting here for convenience
@@ -37,7 +37,7 @@ export async function signup(formData: FormData) {
         password_confirmation: formData.get('password_confirmation') as string
     }
     if (data.password !== data.password_confirmation) {
-        return { error: 'Passwords do not match' }
+        throw new Error('Passwords do not match');
     }
 
     const { error } = await supabase.auth.signUp(data)
