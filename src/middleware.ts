@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-    console.log("визов мідла")
+    // console.log("визов мідла")
     const response = NextResponse.next()
 
     const supabase = createServerClient(
@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
         const {
             data: { user },
-        } = await supabase.auth.getUser() // ✅ більш безпечний варіант
+        } = await supabase.auth.getUser()
         console.log(user)
         if (!user) {
             const redirectUrl = request.nextUrl.clone()
