@@ -16,7 +16,9 @@ export default function HeaderMenu({ onLoginClick }: Props) {
         <div className="flex md:flex space-x-4">
             {isAdmin ? (
                 <>
-                    <HeaderButton>Ставки</HeaderButton>
+                    <Link href="/admin/confirmed">
+                    <HeaderButton>Confirmed</HeaderButton>
+                    </Link>
                     <Link href="/private">
                         <HeaderButton>Таблиця</HeaderButton>
                     </Link>

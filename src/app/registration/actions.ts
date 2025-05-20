@@ -2,13 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
 import { createClient } from '@/utils/supabase/server'
 import {cookies} from "next/headers";
 
 export async function login(formData: FormData) {
     const supabase = await createClient()
-
     const data = {
         email: formData.get('email') as string,
         password: formData.get('password') as string,
@@ -31,14 +29,14 @@ export async function login(formData: FormData) {
         redirect('/error')
     }
 
-    (await cookies()).set('role', profile.role, {
-        path: '/',
-        sameSite: 'lax',
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 7,
-    })
-
-    if (profile.role === 'admin') {
+    if(profile.role === 'admin') {
+        (await cookies()).set('role', profile.role, {
+            path: '/',
+            sameSite: 'lax',
+            httpOnly: false,
+            maxAge: 60 * 60 * 24 * 7,
+            secure: process.env.NODE_ENV === 'production',
+        })
         redirect('/admin')
     } else {
         redirect('/')

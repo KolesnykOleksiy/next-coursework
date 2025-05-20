@@ -18,5 +18,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/', '/admin/:path*'], // сторінки, де треба перевірка ролі
+    matcher: ['/', '/admin/:path*'],
 }
