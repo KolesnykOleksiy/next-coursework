@@ -1,6 +1,8 @@
 'use client'
-import React from 'react'
+import React, {useState} from 'react'
 import dayjs from 'dayjs'
+import EditMatchModal from '@/components/modals/CoefMatchWindow'
+import { supabase } from '@/utils/supabase/client'
 export type MatchType = {
     id: number
     home_team_name: string
@@ -23,6 +25,35 @@ type MatchProps = {
 }
 
 export default function Match({ match, onDelete }: MatchProps) {
+    const [isEditing, setIsEditing] = useState(false)
+
+    const handleConfirm = async (coeffHome: number, coeffAway: number) => {
+        setIsEditing(false)
+        const {error} = await supabase.from('matches').insert({
+            id: match.id,
+            home_team_name: match.home_team_name,
+            away_team_name: match.away_team_name,
+            home_team_score: match.home_team_score,
+            away_team_score: match.away_team_score,
+            status_type: match.status_type,
+            status_reason: match.status_reason,
+            tournament_name: match.tournament_name,
+            league_name: match.league_name,
+            start_time: match.start_time,
+            home_team_hash_image: match.home_team_hash_image,
+            away_team_hash_image: match.away_team_hash_image,
+            league_hash_image: match.league_hash_image,
+            coefficient_home: coeffHome,
+            coefficient_away: coeffAway
+        })
+
+        if (error) {
+            console.error('Помилка вставки в Supabase:', error)
+        } else {
+            console.log('Матч успішно збережено з коефіцієнтами')
+            onDelete(match.id)
+        }
+    }
     return (
         <li
             className="bg-white rounded-2xl shadow-md p-4 mb-6 border border-gray-100 hover:shadow-lg transition relative"
@@ -30,7 +61,7 @@ export default function Match({ match, onDelete }: MatchProps) {
             <div className="absolute top-4 right-4 flex gap-2">
                 <button
                     className="text-sm text-blue-600 hover:underline"
-                    onClick={() => alert('Редагування ще не реалізовано')}
+                    onClick={() => setIsEditing(true)}
                 >
                     Редагувати
                 </button>
@@ -88,6 +119,13 @@ export default function Match({ match, onDelete }: MatchProps) {
                     </div>
                 </div>
             </div>
+            {isEditing && (
+                <EditMatchModal
+                    match={match}
+                    onClose={() => setIsEditing(false)}
+                    onConfirm={handleConfirm}
+                />
+            )}
         </li>
     )
 }

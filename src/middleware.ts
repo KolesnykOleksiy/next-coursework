@@ -1,54 +1,22 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-    // console.log("визов мідла")
-    const response = NextResponse.next()
+export function middleware(request: NextRequest) {
+    const role = request.cookies.get('role')?.value
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll: () => request.cookies.getAll(),
-                setAll: (cookies) => {
-                    for (const cookie of cookies) {
-                        response.cookies.set(cookie.name, cookie.value, cookie.options)
-                    }
-                },
-            },
-        }
-    )
+    if (request.nextUrl.pathname === '/' && role === 'admin') {
+        return NextResponse.redirect(new URL('/admin', request.url))
+    }
 
     if (request.nextUrl.pathname.startsWith('/admin')) {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser()
-        console.log(user)
-        if (!user) {
-            const redirectUrl = request.nextUrl.clone()
-            redirectUrl.pathname = '/login'
-            redirectUrl.searchParams.set('redirectedFrom', request.nextUrl.pathname)
-            return NextResponse.redirect(redirectUrl)
-        }
-
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single()
-        console.log(profile)
-
-        if (error || !profile || profile.role !== 'admin') {
-            const redirectUrl = request.nextUrl.clone()
-            redirectUrl.pathname = '/'
-            return NextResponse.redirect(redirectUrl)
+        if (role !== 'admin') {
+            return NextResponse.redirect(new URL('/', request.url))
         }
     }
 
-    return response
+    return NextResponse.next()
 }
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    matcher: ['/', '/admin/:path*'], // сторінки, де треба перевірка ролі
 }
