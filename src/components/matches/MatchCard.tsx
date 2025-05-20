@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { updateMatch, deleteMatch } from '@/app/admin/confirmed/action'
+import { updateMatch, deleteMatch, finishMatch } from '@/app/admin/confirmed/action'
 import dayjs from "dayjs";
 
 export default function MatchCard({ match }: { match: any }) {
@@ -26,6 +26,11 @@ export default function MatchCard({ match }: { match: any }) {
         location.reload()
     }
 
+    const handleFinish = async () => {
+        await finishMatch(match.id)
+        location.reload()
+    }
+
     return (
         <div className="border rounded-xl p-4 shadow bg-white">
             <h3 className="text-xl font-bold mb-2">{match.home_team_name} vs {match.away_team_name}</h3>
@@ -44,6 +49,7 @@ export default function MatchCard({ match }: { match: any }) {
                             className="w-12 border rounded px-2"
                             type="number"
                             inputMode="numeric"
+                            min="0"
                         />
                         <span>:</span>
                         <input
@@ -53,6 +59,7 @@ export default function MatchCard({ match }: { match: any }) {
                             className="w-12 border rounded px-2"
                             type="number"
                             inputMode="numeric"
+                            min="0"
                         />
                     </div>
                 </div>
@@ -69,19 +76,21 @@ export default function MatchCard({ match }: { match: any }) {
                                 className="mt-1 px-2 py-1 border rounded"
                                 type="number"
                                 inputMode="numeric"
+                                min="0"
                             />
                         </label>
 
                         <label className="flex flex-col text-sm text-gray-700">
                             {match.away_team_name}
                             <input
-                                name="coef_away"
+                                name="coefficient_away"
                                 value={formData.coefficient_away}
                                 onChange={handleChange}
                                 placeholder="Coef Away"
                                 className="mt-1 px-2 py-1 border rounded"
                                 type="number"
                                 inputMode="numeric"
+                                min="0"
                             />
                         </label>
                     </div>
@@ -92,6 +101,17 @@ export default function MatchCard({ match }: { match: any }) {
                     </button>
                     <button onClick={handleDelete}
                             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Видалити
+                    </button>
+                    <button
+                        onClick={handleFinish}
+                        disabled={formData.home_team_score === '' || formData.away_team_score === ''}
+                        className={`px-3 py-1 rounded text-white ${
+                            formData.home_team_score === '' || formData.away_team_score === ''
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-green-500 hover:bg-green-600'
+                        }`}
+                    >
+                        Завершити
                     </button>
                 </div>
             </div>
