@@ -1,7 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
+// @ts-ignore
+import type { PageProps } from 'next/navigation'
 import dayjs from 'dayjs'
 
-export default async function MatchPage({ params }: { params: { id: string } }) {
+export default async function MatchPage({ params }: PageProps) {
     const supabase = await createClient()
     const { data: match, error } = await supabase
         .from('matches')
