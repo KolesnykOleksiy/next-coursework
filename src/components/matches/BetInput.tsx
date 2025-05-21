@@ -74,7 +74,8 @@ export default function BetInput({
                 setSuccess('Ставку успішно зроблено!')
                 setAmount('')
                 onBetSuccess(newBalance)
-                router.push('/my-bets')
+                // router.push('/my-bets')
+                window.location.href = '/my-bets'
             }
         } catch (err) {
             setError('Невідома помилка при ставці')

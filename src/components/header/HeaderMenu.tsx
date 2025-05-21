@@ -49,8 +49,8 @@ export default function HeaderMenu({onLoginClick}: Props) {
                     <Link href="/admin/confirmed">
                         <HeaderButton>Confirmed</HeaderButton>
                     </Link>
-                    <Link href="/private">
-                        <HeaderButton>Таблиця</HeaderButton>
+                    <Link href="/admin">
+                        <HeaderButton>Create matches</HeaderButton>
                     </Link>
                 </>
             ) : (

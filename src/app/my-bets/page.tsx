@@ -15,6 +15,8 @@ type Bet = {
     match_id: number
     coef: number
     amount: number
+    team_name: string
+    success: boolean | null
     match: Match | null
 }
 
@@ -38,10 +40,9 @@ export default function MyBetsPage() {
                 return
             }
 
-            // 1) Запит ставок користувача
             const { data: betsData, error: betsError } = await supabase
                 .from('bets')
-                .select('id, match_id, coef, amount')
+                .select('id, match_id, coef, amount, team_name, success')
                 .eq('user_id', user.id)
                 .order('id', { ascending: false })
 
@@ -57,7 +58,6 @@ export default function MyBetsPage() {
                 return
             }
 
-            // 2) Запит матчів, які відповідають match_id зі ставок
             const matchIds = betsData.map(bet => bet.match_id)
 
             const { data: matchesData, error: matchesError } = await supabase
@@ -71,7 +71,6 @@ export default function MyBetsPage() {
                 return
             }
 
-            // Об'єднуємо ставки з матчами
             const betsWithMatches = betsData.map(bet => ({
                 ...bet,
                 match: matchesData.find(m => m.id === bet.match_id) ?? null,
@@ -100,32 +99,56 @@ export default function MyBetsPage() {
         <div className="max-w-4xl mx-auto p-6 text-white">
             <h1 className="text-3xl font-bold mb-6">Мої ставки</h1>
             <ul className="space-y-4">
-                {bets.map(bet => (
-                    <li
-                        key={bet.id}
-                        className="border border-gray-700 rounded-lg p-4 bg-gray-900 shadow-md"
-                    >
-                        <div className="flex justify-between items-center mb-2">
-                            <div className="text-lg font-semibold">
-                                {bet.match ? (
-                                    <>
-                                        {bet.match.home_team_name} vs {bet.match.away_team_name}
-                                    </>
-                                ) : (
-                                    <span className="italic text-gray-400">Матч не знайдено</span>
-                                )}
-                            </div>
-                            <div className="text-sm text-gray-400">
-                                {bet.match ? new Date(bet.match.start_time).toLocaleString() : ''}
-                            </div>
-                        </div>
+                {bets.map(bet => {
+                    let bgColor = 'bg-gray-900'
+                    if (bet.success === true) bgColor = 'bg-green-900'
+                    if (bet.success === false) bgColor = 'bg-red-900'
 
-                        <div className="flex justify-between text-orange-400 font-semibold text-lg">
-                            <span>Сума ставки: {bet.amount} ₴</span>
-                            <span>Коефіцієнт: {bet.coef}</span>
-                        </div>
-                    </li>
-                ))}
+                    return (
+                        <li
+                            key={bet.id}
+                            className={`border border-gray-700 rounded-lg p-4 shadow-md ${bgColor}`}
+                        >
+                            <div className="flex justify-between items-center mb-2">
+                                <div className="text-lg font-semibold flex gap-1">
+                                    {bet.match ? (
+                                        <>
+                                            <span
+                                                className={
+                                                    bet.team_name === bet.match.home_team_name
+                                                        ? 'text-green-400'
+                                                        : 'text-white'
+                                                }
+                                            >
+                                                {bet.match.home_team_name}
+                                            </span>
+                                            <span className="text-gray-400">vs</span>
+                                            <span
+                                                className={
+                                                    bet.team_name === bet.match.away_team_name
+                                                        ? 'text-orange-400'
+                                                        : 'text-white'
+                                                }
+                                            >
+                                                {bet.match.away_team_name}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="italic text-gray-400">Матч не знайдено</span>
+                                    )}
+                                </div>
+                                <div className="text-sm text-gray-400">
+                                    {bet.match ? new Date(bet.match.start_time).toLocaleString() : ''}
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between text-orange-400 font-semibold text-lg">
+                                <span>Сума ставки: {bet.amount} ₴</span>
+                                <span>Коефіцієнт: {bet.coef}</span>
+                            </div>
+                        </li>
+                    )
+                })}
             </ul>
         </div>
     )

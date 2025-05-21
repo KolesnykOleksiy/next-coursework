@@ -3,12 +3,23 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 
 export default function UserMatchList({ matches }: { matches: any[] }) {
     const router = useRouter()
+    const supabase = createClient()
 
-    const handleClick = (matchId: number) => {
-        router.push(`/match/${matchId}`)
+    const handleClick = async (matchId: number) => {
+        // Перевіряємо авторизацію при кліку
+        const { data: { user }, error } = await supabase.auth.getUser()
+
+        if (error || !user) {
+            // Якщо не авторизований - перенаправляємо на реєстрацію
+            router.push('/registration')
+        } else {
+            // Якщо авторизований - переходимо на сторінку матчу
+            router.push(`/match/${matchId}`)
+        }
     }
 
     return (
