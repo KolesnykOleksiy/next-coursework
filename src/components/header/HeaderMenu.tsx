@@ -63,7 +63,7 @@ export default function HeaderMenu({onLoginClick}: Props) {
                             {balance !== null && (
                                 <span
                                     className="text-base font-semibold text-white bg-orange-800 px-4 py-2 rounded-md shadow-md border border-orange-300">
-    Баланс: <span className="text-black">{balance} ₴</span>
+    Balance: <span className="text-black">{balance} ₴</span>
 </span>
 
                             )}
