@@ -96,7 +96,7 @@ export default function MyBetsPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6 text-white">
+        <div className="max-w-4xl mx-auto p-6 text-orange">
             <h1 className="text-3xl font-bold mb-6">My bets</h1>
             <ul className="space-y-4">
                 {bets.map(bet => {
