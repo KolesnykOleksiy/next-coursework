@@ -47,32 +47,7 @@ export async function updateSession(request: NextRequest) {
         url.pathname = '/login'
         return NextResponse.redirect(url)
     }
-    // if (user) {
-    //     // Отримуємо роль з профілю
-    //     const { data: profile, error } = await supabase
-    //         .from('profiles')
-    //         .select('role')
-    //         .eq('id', user.id)
-    //         .single()
-    //
-    //     if (error || !profile) {
-    //         // Помилка або профіль не знайдено — можна пропустити або зробити редірект на /
-    //         return supabaseResponse
-    //     }
-    //
-    //     const pathname = request.nextUrl.pathname
-    //
-    //     if (profile.role === 'admin' && pathname !== '/admin') {
-    //         const url = request.nextUrl.clone()
-    //         url.pathname = '/admin'
-    //         return NextResponse.redirect(url)
-    //     }else{
-    //         const url = request.nextUrl.clone()
-    //         url.pathname = '/'
-    //         return NextResponse.redirect(url)
-    //     }
-    //
-    //     }
+
 
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is.

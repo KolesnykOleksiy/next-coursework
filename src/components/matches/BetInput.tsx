@@ -86,7 +86,7 @@ export default function BetInput({
 
     return (
         <div className="border-t border-gray-800 p-6 bg-gray-950">
-            <label className="block text-lg font-semibold mb-3">Введіть суму ставки:</label>
+            <label className="block text-lg font-semibold mb-3">Enter your bet amount:</label>
 
             <input
                 type="number"

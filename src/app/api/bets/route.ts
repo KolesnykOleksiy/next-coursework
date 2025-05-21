@@ -17,11 +17,11 @@ export async function POST(request: Request) {
         .single()
 
     if (profileError || !profile) {
-        return NextResponse.json({ error: 'Користувач не знайдений' }, { status: 404 })
+        return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     if (profile.total_sum < amount) {
-        return NextResponse.json({ error: 'Недостатньо коштів' }, { status: 400 })
+        return NextResponse.json({ error: 'Insufficient funds' }, { status: 400 })
     }
 
     const { data, error } = await supabase
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         .insert({ user_id, match_id, coef, amount,team_name })
 
     if (error) {
-        return NextResponse.json({ error: 'Не вдалося зробити ставку' }, { status: 500 })
+        return NextResponse.json({ error: 'Failed to make a bet.' }, { status: 500 })
     }
 
     const { error: updateError } = await supabase
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
 
     if (updateError) {
-        return NextResponse.json({ error: 'Не вдалося оновити баланс' }, { status: 500 })
+        return NextResponse.json({ error: 'Failed to update balance' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })

@@ -58,7 +58,7 @@ export default function HeaderMenu({onLoginClick}: Props) {
                     {isAuthenticated ? (
                         <>
                             <Link href="/my-bets">
-                                <HeaderButton>Мої ставки</HeaderButton>
+                                <HeaderButton>My bets</HeaderButton>
                             </Link>
                             {balance !== null && (
                                 <span
@@ -70,9 +70,9 @@ export default function HeaderMenu({onLoginClick}: Props) {
                         </>
                     ) : (
                         <>
-                            <HeaderButton onClick={onLoginClick}>Увійти</HeaderButton>
+                            <HeaderButton onClick={onLoginClick}>Log in</HeaderButton>
                             <Link href="/registration">
-                                <HeaderButton>Зареєструватись</HeaderButton>
+                                <HeaderButton>Sign up</HeaderButton>
                             </Link>
                         </>
                     )}

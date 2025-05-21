@@ -60,10 +60,9 @@ export async function finishMatch(id: number) {
     } else if (away_team_score > home_team_score) {
         winnerTeamName = away_team_name
     } else {
-        winnerTeamName = null // Нічия, всі ставки програні
+        winnerTeamName = null
     }
 
-    // 3. Отримуємо всі ставки на цей матч
     const { data: bets, error: betsError } = await supabase
         .from('bets')
         .select('id, user_id, team_name, amount, coef')
@@ -75,7 +74,6 @@ export async function finishMatch(id: number) {
     for (const bet of bets) {
         const isWin = winnerTeamName && bet.team_name === winnerTeamName
 
-        // 4. Оновлюємо ставку: успішна чи ні
         const { error: updateBetError } = await supabase
             .from('bets')
             .update({ success: isWin })
@@ -83,11 +81,9 @@ export async function finishMatch(id: number) {
 
         if (updateBetError) console.error(`Помилка при оновленні ставки ${bet.id}:`, updateBetError.message)
 
-        // 5. Якщо ставка виграшна — нараховуємо виграш
         if (isWin) {
             const winAmount = bet.amount * bet.coef
 
-            // Отримуємо поточний баланс
             const { data: profile, error: profileError } = await supabase
                 .from('profiles')
                 .select('total_sum')
@@ -99,7 +95,6 @@ export async function finishMatch(id: number) {
                 return
             }
 
-            // Оновлюємо баланс
             const newTotalSum = profile.total_sum + winAmount
 
             const { error: updateError } = await supabase

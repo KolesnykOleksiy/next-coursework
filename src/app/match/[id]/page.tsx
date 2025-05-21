@@ -73,7 +73,6 @@ export default function MatchPage() {
     return (
         <div className="max-w-3xl mx-auto mt-10 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 text-white bg-gray-900">
             <div className="p-8 space-y-8">
-                {/* Ліга і дата */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <img
@@ -88,7 +87,6 @@ export default function MatchPage() {
                     </span>
                 </div>
 
-                {/* Команди */}
                 <div className="relative flex items-center justify-between px-4">
                     <div className="flex items-center gap-4 w-1/2 justify-start">
                         <img
@@ -113,7 +111,6 @@ export default function MatchPage() {
                     </div>
                 </div>
 
-                {/* Коефіцієнти */}
                 <div className="grid grid-cols-3 gap-4">
                     <div
                         onClick={() => handleCoefSelect(match.coefficient_home)}

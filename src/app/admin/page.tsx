@@ -82,12 +82,12 @@ export default function AdminPage() {
                 </button>
             </div>
 
-            {loading && <p>Завантаження матчів...</p>}
+            {loading && <p>Loading matches...</p>}
             {error && <p className="text-red-600">{error}</p>}
 
             {matches.length > 0 && (
                 <>
-                    <h2 className="text-lg font-semibold mb-3">Матчі на {date}:</h2>
+                    <h2 className="text-lg font-semibold mb-3">Matches on {date}:</h2>
                     <MatchList matches={matches} />
                 </>
             )}

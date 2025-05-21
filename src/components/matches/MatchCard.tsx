@@ -64,7 +64,7 @@ export default function MatchCard({ match }: { match: any }) {
                     </div>
                 </div>
                 <div>
-                    <label>Коефіцієнти:</label>
+                    <label>Coefficients:</label>
                     <div className="flex flex-col gap-2">
                         <label className="flex flex-col text-sm text-gray-700">
                             {match.home_team_name}
@@ -97,10 +97,10 @@ export default function MatchCard({ match }: { match: any }) {
                 </div>
                 <div className="flex gap-2 mt-4">
                     <button onClick={handleUpdate}
-                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Оновити
+                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Refresh
                     </button>
                     <button onClick={handleDelete}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Видалити
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete
                     </button>
                     <button
                         onClick={handleFinish}
@@ -111,7 +111,7 @@ export default function MatchCard({ match }: { match: any }) {
                                 : 'bg-green-500 hover:bg-green-600'
                         }`}
                     >
-                        Завершити
+                        Finish
                     </button>
                 </div>
             </div>
