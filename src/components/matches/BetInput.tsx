@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import {useState} from 'react'
+import {useRouter} from 'next/navigation'
 
 type BetInputProps = {
-    userId: string
-    matchId: number
-    selectedCoef: number | null
-    balance: number
-    onBetSuccess: (newBalance: number) => void
+    userId: string,
+    matchId: number,
+    selectedCoef: number | null,
+    balance: number,
+    onBetSuccess: (newBalance: number) => void,
+    team_name: string | null
 }
 
 export default function BetInput({
@@ -16,7 +17,8 @@ export default function BetInput({
                                      matchId,
                                      selectedCoef,
                                      balance,
-                                     onBetSuccess
+                                     onBetSuccess,
+                                     team_name
                                  }: BetInputProps) {
     const [amount, setAmount] = useState<number | ''>('')
     const [loading, setLoading] = useState(false)
@@ -59,6 +61,7 @@ export default function BetInput({
                     match_id: matchId,
                     coef: selectedCoef,
                     amount,
+                    team_name
                 }),
             })
 

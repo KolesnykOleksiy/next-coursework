@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 export async function POST(request: Request) {
     const supabase = await createClient()
     const body = await request.json()
-    const { user_id, match_id, coef, amount } = body
+    const { user_id, match_id, coef, amount,team_name } = body
 
     if (!user_id || !match_id || !coef || !amount || amount < 25) {
         return NextResponse.json({ error: 'Невірні дані' }, { status: 400 })
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase
         .from('bets')
-        .insert({ user_id, match_id, coef, amount })
+        .insert({ user_id, match_id, coef, amount,team_name })
 
     if (error) {
         return NextResponse.json({ error: 'Не вдалося зробити ставку' }, { status: 500 })

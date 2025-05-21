@@ -14,6 +14,7 @@ export default function MatchPage() {
     const [balance, setBalance] = useState<number>(0)
     const [selectedCoef, setSelectedCoef] = useState<number | null>(null)
     const [userId, setUserId] = useState<string | null>(null)
+    const [team_name, setTeamName] = useState<string | null>(null)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +50,17 @@ export default function MatchPage() {
             fetchData()
         }
     }, [matchId])
+
+    const handleCoefSelect = (coef: number) => {
+        setSelectedCoef(coef);
+        if (coef === match?.coefficient_home) {
+            setTeamName(match.home_team_name);
+        } else if (coef === match?.coefficient_away) {
+            setTeamName(match.away_team_name);
+        } else {
+            setTeamName(null);
+        }
+    }
 
     if (!match) {
         return <div className="text-center text-white p-10">Завантаження матчу...</div>
@@ -104,7 +116,7 @@ export default function MatchPage() {
                 {/* Коефіцієнти */}
                 <div className="grid grid-cols-3 gap-4">
                     <div
-                        onClick={() => setSelectedCoef(match.coefficient_home)}
+                        onClick={() => handleCoefSelect(match.coefficient_home)}
                         className={`text-white text-center py-3 rounded-lg text-xl font-bold cursor-pointer transition duration-300 transform ${
                             selectedCoef === match.coefficient_home
                                 ? 'bg-orange-700 border-2 border-yellow-400 shadow-lg scale-105'
@@ -115,7 +127,7 @@ export default function MatchPage() {
                     </div>
                     <div className="text-center py-3 rounded-lg text-xl font-bold text-gray-300">X</div>
                     <div
-                        onClick={() => setSelectedCoef(match.coefficient_away)}
+                        onClick={() => handleCoefSelect(match.coefficient_away)}
                         className={`text-white text-center py-3 rounded-lg text-xl font-bold cursor-pointer transition duration-300 transform ${
                             selectedCoef === match.coefficient_away
                                 ? 'bg-orange-700 border-2 border-yellow-400 shadow-lg scale-105'
@@ -132,6 +144,7 @@ export default function MatchPage() {
                 userId={userId}
                 matchId={match.id}
                 selectedCoef={selectedCoef}
+                team_name={team_name}
                 onBetSuccess={(newBalance: number) => setBalance(newBalance)}
             />
         </div>
