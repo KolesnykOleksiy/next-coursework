@@ -1,8 +1,14 @@
-import { createClient } from '@/utils/supabase/server';
+import { getMatches } from '@/app/admin/confirmed/action'
+import UserMatchList from "@/components/matches/UserMatchList";
 
-export default async function Instruments() {
-    const supabase = await createClient();
-    const { data: instruments } = await supabase.from("instruments").select();
-    return <pre>{JSON.stringify(instruments, null, 2)}</pre>
+
+export default async function MatchesPage() {
+    const matches = await getMatches()
+
+    return (
+        <div className="p-6">
+            <h1 className="text-2xl font-bold mb-4">Available matches</h1>
+            <UserMatchList matches={matches} />
+        </div>
+    )
 }
-
