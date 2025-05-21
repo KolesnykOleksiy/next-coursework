@@ -7,7 +7,7 @@ export default async function MatchesPage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Доступні матчі</h1>
+            <h1 className="text-2xl font-bold mb-4">Available matches</h1>
             <UserMatchList matches={matches} />
         </div>
     )

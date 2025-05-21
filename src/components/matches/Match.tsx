@@ -63,13 +63,13 @@ export default function Match({ match, onDelete }: MatchProps) {
                     className="text-sm text-blue-600 hover:underline"
                     onClick={() => setIsEditing(true)}
                 >
-                    Редагувати
+                    Edit
                 </button>
                 <button
                     className="text-sm text-red-600 hover:underline"
                     onClick={() => onDelete(match.id)}
                 >
-                    Видалити
+                    Delete
                 </button>
             </div>
 

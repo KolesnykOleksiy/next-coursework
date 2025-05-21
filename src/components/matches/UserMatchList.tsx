@@ -3,12 +3,20 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 
 export default function UserMatchList({ matches }: { matches: any[] }) {
     const router = useRouter()
+    const supabase = createClient()
 
-    const handleClick = (matchId: number) => {
-        router.push(`/match/${matchId}`)
+    const handleClick = async (matchId: number) => {
+        const { data: { user }, error } = await supabase.auth.getUser()
+
+        if (error || !user) {
+            router.push('/registration')
+        } else {
+            router.push(`/match/${matchId}`)
+        }
     }
 
     return (
@@ -19,7 +27,6 @@ export default function UserMatchList({ matches }: { matches: any[] }) {
                     onClick={() => handleClick(match.id)}
                     className="cursor-pointer border border-orange-500 rounded-xl p-4 shadow-md bg-black text-white flex flex-col gap-4 hover:bg-orange-950 transition-colors"
                 >
-                    {/* Ліга по центру */}
                     <div className="flex justify-center">
                         <img
                             src={`https://images.sportdevs.com/${match.league_hash_image}.png`}
@@ -28,12 +35,10 @@ export default function UserMatchList({ matches }: { matches: any[] }) {
                         />
                     </div>
 
-                    {/* Дата */}
                     <div className="text-center text-xs text-gray-400">
                         {dayjs(match.start_time).format('DD.MM.YYYY HH:mm')}
                     </div>
 
-                    {/* Команди */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 w-1/2">
                             <img
@@ -54,7 +59,6 @@ export default function UserMatchList({ matches }: { matches: any[] }) {
                         </div>
                     </div>
 
-                    {/* Коефіцієнти */}
                     <div className="flex justify-around text-sm font-semibold">
                         <div className="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1 rounded w-1/3 text-center transition">
                             {match.coefficient_home}

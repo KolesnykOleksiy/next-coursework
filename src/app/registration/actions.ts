@@ -44,25 +44,35 @@ export async function login(formData: FormData) {
 
 }
 
-export async function signup(formData: FormData):Promise<void> {
+export async function signup(formData: FormData): Promise<void> {
     const supabase = await createClient()
 
     const data = {
         email: formData.get('email') as string,
         password: formData.get('password') as string,
         name: formData.get('name') as string,
-        password_confirmation: formData.get('password_confirmation') as string
-    }
-    if (data.password !== data.password_confirmation) {
-        throw new Error('Passwords do not match');
+        password_confirmation: formData.get('password_confirmation') as string,
     }
 
-    const { error } = await supabase.auth.signUp(data)
+    if (!data.email || !data.password || !data.password_confirmation || !data.name) {
+        throw new Error('All fields are required')
+    }
+
+    if (data.password !== data.password_confirmation) {
+        throw new Error('Passwords do not match')
+    }
+
+    const { error, data: signupData } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+    })
 
     if (error) {
+        if (error.message.includes("User already registered")) {
+            throw new Error("User with this email already exists")
+        }
         redirect('/error')
     }
 
-    revalidatePath('/', 'layout')
-    redirect('/')
+    redirect('/confirm-email')
 }

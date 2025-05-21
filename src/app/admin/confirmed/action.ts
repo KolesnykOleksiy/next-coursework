@@ -42,6 +42,71 @@ export async function finishMatch(id: number) {
         .eq('id', id)
 
     if (error) throw new Error(error.message)
+    const { data: match, error: matchError } = await supabase
+        .from('matches')
+        .select('home_team_score, away_team_score, home_team_name, away_team_name')
+        .eq('id', id)
+        .single()
+
+    console.log(match)
+    if (matchError || !match) throw new Error('Не вдалося отримати дані матчу')
+
+    const { home_team_score, away_team_score, home_team_name, away_team_name } = match
+
+    let winnerTeamName: string | null = null
+
+    if (home_team_score > away_team_score) {
+        winnerTeamName = home_team_name
+    } else if (away_team_score > home_team_score) {
+        winnerTeamName = away_team_name
+    } else {
+        winnerTeamName = null
+    }
+
+    const { data: bets, error: betsError } = await supabase
+        .from('bets')
+        .select('id, user_id, team_name, amount, coef')
+        .eq('match_id', id)
+
+    console.log(bets)
+    if (betsError || !bets) throw new Error('Не вдалося отримати ставки')
+
+    for (const bet of bets) {
+        const isWin = winnerTeamName && bet.team_name === winnerTeamName
+
+        const { error: updateBetError } = await supabase
+            .from('bets')
+            .update({ success: isWin })
+            .eq('id', bet.id)
+
+        if (updateBetError) console.error(`Помилка при оновленні ставки ${bet.id}:`, updateBetError.message)
+
+        if (isWin) {
+            const winAmount = bet.amount * bet.coef
+
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('total_sum')
+                .eq('id', bet.user_id)
+                .single()
+
+            if (profileError) {
+                console.error(`Помилка при отриманні балансу користувача ${bet.user_id}:`, profileError.message)
+                return
+            }
+
+            const newTotalSum = profile.total_sum + winAmount
+
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ total_sum: newTotalSum })
+                .eq('id', bet.user_id)
+
+            if (updateError) {
+                console.error(`Помилка при оновленні балансу користувача ${bet.user_id}:`, updateError.message)
+            }
+        }
+    }
 
     revalidatePath('/admin/confirmed')
 }
